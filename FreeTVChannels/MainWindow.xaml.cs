@@ -29,7 +29,8 @@ namespace FreeTVChannels
     public partial class MainWindow : Window
     {
         public ObservableCollection<Channel> channels { get; }
-       = new ObservableCollection<Channel>(); 
+       = new ObservableCollection<Channel>();
+        string json = "";
         public MainWindow()
         {
             InitializeComponent();
@@ -39,13 +40,39 @@ namespace FreeTVChannels
                 var json = wc.DownloadString("https://iptv-org.github.io/iptv/channels.json");
                 channels = JsonConvert.DeserializeObject<ObservableCollection<Channel>>(json);
             }
-                wpChannels.ItemsSource = channels;
+            wpChannels.ItemsSource = channels.Take(1000);
         }
 
         private void Card_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            player.MediaPlayer = new LibVLCSharp.Shared.MediaPlayer(new LibVLCSharp.Shared.Media(new LibVLCSharp.Shared.LibVLC(), new Uri(((Channel)((ChannelCard)sender).DataContext).Url)));
-            player.MediaPlayer.Play();
+            Channel channel = (Channel)((ChannelCard)sender).DataContext;
+            if (player.MediaPlayer == null)
+            {
+                player.MediaPlayer = new LibVLCSharp.Shared.MediaPlayer(new LibVLCSharp.Shared.Media(new LibVLCSharp.Shared.LibVLC(), new Uri(channel.Url)));
+                player.MediaPlayer.Play();
+            }
+            else
+                player.MediaPlayer.Play(new LibVLCSharp.Shared.Media(new LibVLCSharp.Shared.LibVLC(), new Uri(channel.Url)));
+            tbName.Text = channel.Name;
+            tbUrl.Text = channel.Url;
+            tbLogo.Text = channel.Logo;
+            tbCountry.Text = channel.Counrty?.Name;
+            tbCategory.Text = channel.Category;
+            json = ("{"
+                + $"\"Id\":,"
+                + $"\"Name\":\"{channel.Name}\","
+                + $"\"Link\":\"{channel.Url}\","
+                + $"\"IconSource\":\"{channel.Logo}\","
+                + $"\"Tags\":["
+                + channel.Category != null ? $"\"{channel.Category?.ToLower()}\"," : ""
+                + channel.Counrty != null ? $"\"{channel.Counrty?.Name?.ToLower()}\"" : ""
+                + "]"
+            + "}");
+        }
+
+        private void btnCopyJson_Click(object sender, RoutedEventArgs e)
+        {
+            Clipboard.SetText(json);
         }
     }
 }

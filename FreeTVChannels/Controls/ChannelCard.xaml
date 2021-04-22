@@ -6,9 +6,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FreeTVChannels.Controls"
              mc:Ignorable="d" UniformCornerRadius="10" Margin="5"
-             d:DesignHeight="110" d:DesignWidth="110">
+             d:DesignHeight="110" d:DesignWidth="110" Width="110" Height="110">
     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-        <Image Source="{Binding Path=Uri}" Height="60" Width="60"/>
+        <Image Source="{Binding Path=Logo}" Height="60" Width="60"/>
         <TextBlock  Text="{Binding Path=Name}" TextWrapping="Wrap"/>
     </StackPanel>
 </materialDesign:Card>
