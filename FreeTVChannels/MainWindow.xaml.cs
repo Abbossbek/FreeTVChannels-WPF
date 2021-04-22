@@ -58,16 +58,16 @@ namespace FreeTVChannels
             tbLogo.Text = channel.Logo;
             tbCountry.Text = channel.Counrty?.Name;
             tbCategory.Text = channel.Category;
-            json = ("{"
-                + $"\"Id\":,"
-                + $"\"Name\":\"{channel.Name}\","
-                + $"\"Link\":\"{channel.Url}\","
-                + $"\"IconSource\":\"{channel.Logo}\","
-                + $"\"Tags\":["
-                + channel.Category != null ? $"\"{channel.Category?.ToLower()}\"," : ""
-                + channel.Counrty != null ? $"\"{channel.Counrty?.Name?.ToLower()}\"" : ""
-                + "]"
-            + "}");
+            json = "";
+            json += "{";
+            json += $"\"Id\":,";
+            json += $"\"Name\":\"{channel.Name}\",";
+            json += $"\"Link\":\"{channel.Url}\",";
+            json += $"\"IconSource\":\"{channel.Logo}\",";
+            json += $"\"Tags\":[";
+            json += channel.Category != null ? $"\"{channel.Category?.ToLower()}\"" : "";
+            json += channel.Counrty != null ? $",\"{channel.Counrty?.Name?.ToLower()}\"" : "";
+            json += "]}";
         }
 
         private void btnCopyJson_Click(object sender, RoutedEventArgs e)
