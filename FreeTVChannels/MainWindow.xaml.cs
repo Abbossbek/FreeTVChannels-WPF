@@ -1,6 +1,14 @@
-﻿using System;
+﻿using FreeTVChannels.Controls;
+using FreeTVChannels.Models;
+
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,11 +28,23 @@ namespace FreeTVChannels
     /// </summary>
     public partial class MainWindow : Window
     {
+        public ObservableCollection<Channel> channels { get; }
+       = new ObservableCollection<Channel>(); 
         public MainWindow()
         {
             InitializeComponent();
             LibVLCSharp.Shared.Core.Initialize();
-            player.MediaPlayer = new LibVLCSharp.Shared.MediaPlayer(new LibVLCSharp.Shared.Media(new LibVLCSharp.Shared.LibVLC(), new Uri("http://sc.id-tv.kz/Kinokomediya_hd_34_35.m3u8")));
+            using (WebClient wc = new WebClient())
+            {
+                var json = wc.DownloadString("https://iptv-org.github.io/iptv/channels.json");
+                channels = JsonConvert.DeserializeObject<ObservableCollection<Channel>>(json);
+            }
+                wpChannels.ItemsSource = channels;
+        }
+
+        private void Card_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            player.MediaPlayer = new LibVLCSharp.Shared.MediaPlayer(new LibVLCSharp.Shared.Media(new LibVLCSharp.Shared.LibVLC(), new Uri(((Channel)((ChannelCard)sender).DataContext).Url)));
             player.MediaPlayer.Play();
         }
     }
