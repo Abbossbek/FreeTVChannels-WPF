@@ -12,8 +12,8 @@ namespace FreeTVChannels.Models
         public string Logo { get; set; }
         public string Url { get; set; }
         public string Category { get; set; }
-        public Language Language { get; set; }
-        public Counrty Counrty { get; set; }
+        public Language[] Languages { get; set; }
+        public Country[] Countries { get; set; }
         public TVG TVG { get; set; }
     }
 }

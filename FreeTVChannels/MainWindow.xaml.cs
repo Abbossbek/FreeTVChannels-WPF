@@ -40,7 +40,7 @@ namespace FreeTVChannels
                 var json = wc.DownloadString("https://iptv-org.github.io/iptv/channels.json");
                 channels = JsonConvert.DeserializeObject<ObservableCollection<Channel>>(json);
             }
-            wpChannels.ItemsSource = channels.Take(1000);
+            wpChannels.ItemsSource = channels.Where(x => x.Countries.Length > 0 && x.Countries[0].Name.Contains("spain", StringComparison.OrdinalIgnoreCase));
         }
 
         private void Card_MouseDown(object sender, MouseButtonEventArgs e)
@@ -52,11 +52,14 @@ namespace FreeTVChannels
                 player.MediaPlayer.Play();
             }
             else
+            {
+                player.MediaPlayer.Stop();
                 player.MediaPlayer.Play(new LibVLCSharp.Shared.Media(new LibVLCSharp.Shared.LibVLC(), new Uri(channel.Url)));
+            }
             tbName.Text = channel.Name;
             tbUrl.Text = channel.Url;
             tbLogo.Text = channel.Logo;
-            tbCountry.Text = channel.Counrty?.Name;
+            tbCountry.Text = channel.Countries?[0]?.Name;
             tbCategory.Text = channel.Category;
             json = "";
             json += "{";
@@ -66,7 +69,7 @@ namespace FreeTVChannels
             json += $"\"IconSource\":\"{channel.Logo}\",";
             json += $"\"Tags\":[";
             json += channel.Category != null ? $"\"{channel.Category?.ToLower()}\"" : "";
-            json += channel.Counrty != null ? $",\"{channel.Counrty?.Name?.ToLower()}\"" : "";
+            json += channel.Countries != null ? $",\"{channel.Countries?[0]?.Name?.ToLower()}\"" : "";
             json += "]}";
         }
 
