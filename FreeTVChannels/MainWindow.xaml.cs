@@ -40,7 +40,7 @@ namespace FreeTVChannels
                 var json = wc.DownloadString("https://iptv-org.github.io/iptv/channels.json");
                 channels = JsonConvert.DeserializeObject<ObservableCollection<Channel>>(json);
             }
-            wpChannels.ItemsSource = channels.Where(x => x.Countries.Length > 0 && x.Countries[0].Name.Contains("german", StringComparison.OrdinalIgnoreCase));
+            wpChannels.ItemsSource = channels.Where(x => x.Countries.Length > 0 && x.Countries[0].Name.Contains("RUSSIA", StringComparison.OrdinalIgnoreCase));
         }
 
         private void Card_MouseDown(object sender, MouseButtonEventArgs e)
